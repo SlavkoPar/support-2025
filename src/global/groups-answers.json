@@ -4,23 +4,23 @@
     "title": "General",
     "groups": [
       {
-        "id": "A",
-        "title": "Aaaaaaaaaa",
+        "id": "FOOD",
+        "title": "Food",
         "answers": [
           {
-          "title": "On most Windows 10 installations, this path resolves to C:\\Users\\<Current-user>\\AppData\\Local\\Microsoft\\Edge\\Profile.",
+          "title": "Make apple pie",
           "source": 0,
           "status": 0
         }
       ]
       },
       {
-        "id": "B",
-        "title": "Bbbbbbbbbb",
+        "id": "BEVERAGE",
+        "title": "Beverage",
         "groups": [
           {
-            "id": "X",
-            "title": "Xxxxx",
+            "id": "UBUNTU",
+            "title": "Ubuntu",
             "answers": [
               {
                 "title": "Jump through the window",
@@ -30,26 +30,90 @@
             ]
           },
           {
-            "id": "Y",
-            "title": "Yyyyyy",
+            "id": "REDHAT",
+            "title": "Red Hat",
             "answers": [
               {
-                "title": "Arghhh",
+                "title": "Take off the hat",
                 "source": 0,
                 "status": 0
               },
               {
-                "title": "Uraaaaaaaaa",
+                "title": "Jump through the window",
                 "source": 0,
                 "status": 0
               }
             ]
           }
+          
+        ]
+      }
+    ]
+  },
+  {
+    "id": "OPSYS",
+    "title": "Operating Systems",
+    "groups": [
+      {
+        "id": "WINDOWS",
+        "title": "Windows",
+        "answers": [
+          {
+          "title": "On most Windows 10 installations, this path resolves to C:\\Users\\<Current-user>\\AppData\\Local\\Microsoft\\Edge\\Profile.",
+          "source": 0,
+          "status": 0
+        }
+      ]
+      },
+      {
+        "id": "LINUX",
+        "title": "Linux",
+        "groups": [
+          {
+            "id": "UBUNTU",
+            "title": "Ubuntu",
+            "answers": [
+              {
+                "title": "Jump through the window",
+                "source": 0,
+                "status": 0
+              }
+            ]
+          },
+          {
+            "id": "REDHAT",
+            "title": "Red Hat",
+            "answers": [
+              {
+                "title": "Take off the hat",
+                "source": 0,
+                "status": 0
+              },
+              {
+                "title": "Jump through the window",
+                "source": 0,
+                "status": 0
+              }
+            ]
+          }
+          
         ]
       },
       {
-        "id": "NAKO",
-        "title": "Nako"
+        "id": "APPLE",
+        "title": "Apple",
+        "answers": [
+          {
+            "title": "Apple Admin will help you",
+            "source": 0,
+            "status": 0
+          },
+          {
+            "title": "Uraaaaaaaaa reseno je",
+            "source": 0,
+            "status": 0
+          }
+        ]
       }
     ]
   },

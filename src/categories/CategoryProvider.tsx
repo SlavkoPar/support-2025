@@ -2,7 +2,8 @@ import { useGlobalState } from 'global/GlobalProvider'
 import React, { createContext, useContext, useReducer, useCallback, Dispatch } from 'react';
 
 import {
-  ActionTypes, ICategory, IQuestion, ICategoriesContext, IParentInfo, IFromUserAssignedAnswer
+  ActionTypes, ICategory, IQuestion, ICategoriesContext, IParentInfo, IFromUserAssignedAnswer,
+  IQuestionAnswer
 } from 'categories/types';
 import { initialCategoriesState, CategoriesReducer } from 'categories/CategoriesReducer';
 import { IDateAndBy } from 'global/types';
@@ -142,22 +143,6 @@ export const CategoryProvider: React.FC<Props> = ({ children }) => {
       console.log(error)
       dispatch({ type: ActionTypes.SET_ERROR, payload: { error } });
     }
-    //console.log('FETCHING --->>> getSubCategories', level, parentCategory)
-    //dispatch({ type: ActionTypes.SET_LOADING })
-    // axios
-    //   .get(url)
-    //   .then(({ data }) => {
-    //     const subCategories = data.map((c: ICategory) => ({
-    //       ...c,
-    //       questions: [],
-    //       isExpanded: parentNodesIds ? parentNodesIds.includes(c._id!.toString()) : false
-    //     }))
-    //     dispatch({ type: ActionTypes.SET_SUB_CATEGORIES, payload: { subCategories } });
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //     dispatch({ type: ActionTypes.SET_ERROR, payload: error });
-    //   });
   }, [parentNodesIds]);
 
   const createCategory = useCallback(async (category: ICategory) => {
@@ -199,16 +184,6 @@ export const CategoryProvider: React.FC<Props> = ({ children }) => {
         }
       }
     });
-    // dispatch({ type: ActionTypes.SET_LOADING })
-    // axios
-    //   .get(url)
-    //   .then(({ data: category }) => {
-    //     dispatch({ type, payload: { category } });
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //     dispatch({ type: ActionTypes.SET_ERROR, payload: error });
-    //   });
   };
 
   const viewCategory = useCallback((id: string) => {
@@ -453,52 +428,47 @@ export const CategoryProvider: React.FC<Props> = ({ children }) => {
   const assignQuestionAnswer = useCallback(async (questionId: number, answerId: number, assigned: IDateAndBy): Promise<any> => {
     try {
       const question = await dbp!.get('Questions', questionId);
-      const obj: IQuestion = {
-        ...question,
-        questionAnswers: [...question.questionAnswers, { answerId, user: { nickName: 'Pera', createdBy: 'date string' }, assigned }]
+      const answer: IAnswer = await dbp!.get('Answers', answerId);
+      const newQuestionAnser: IQuestionAnswer = {
+        answer: {
+          id: answerId,
+          title: answer.title
+        },
+        user: {
+          nickName: globalState.authUser.nickName,
+          createdBy: 'date string'
+        },
+        assigned
       }
+      const obj: IQuestion = { ...question, questionAnswers: [...question.questionAnswers, newQuestionAnser] }
       await dbp!.put('Questions', obj, questionId);
       console.log("Question Answer successfully assigned");
-      dispatch({ type: ActionTypes.SET_QUESTION, payload: { question: obj } });
+      // dispatch({ type: ActionTypes.SET_QUESTION, payload: { question: obj } });
+      dispatch({ type: ActionTypes.SET_QUESTION_AFTER_ASSIGN_ANSWER, payload: { question: { id: questionId, ...obj} } });
       return obj;
     }
     catch (error: any) {
       console.log('error', error);
       dispatch({ type: ActionTypes.SET_ERROR, payload: { error } });
     }
-    // try {
-    //   const url = `/api/questions/assign-question-answer/${questionId}`;
-    //   const res = await axios.put(url, { answerId, assigned })
-    //   const { status, data } = res;
-    //   if (status === 200) {
-    //     console.log("Answer successfully assigned to Question");
-    //     dispatch({ type: ActionTypes.SET_QUESTION_AFTER_ASSIGN_ANSWER, payload: { question: data } });
-    //   }
-    //   else {
-    //     console.log('Status is not 200', status)
-    //     dispatch({
-    //       type: ActionTypes.SET_ERROR,
-    //       payload: { error: new Error('Status is not 200 status:' + status) }
-    //     });
-    //   }
-    // }
-    // catch (err: any | Error) {
-    //   if (axios.isError(err)) {
-    //     dispatch({
-    //       type: ActionTypes.SET_ERROR,
-    //       payload: {
-    //         error: err
-    //       }
-    //     })
-    //   }
-    //   else {
-    //     console.log(err);
-    //   }
-    // }
   }, []);
 
 
-  const unAssignQuestionAnswer = useCallback(async (questionId: IDBValidKey, answerId: IDBValidKey): Promise<any> => {
+  const unAssignQuestionAnswer = useCallback(async (questionId: number, answerId: number): Promise<any> => {
+    try {
+      const question = await dbp!.get('Questions', questionId);
+      // const answer: IAnswer = await dbp!.get('Answers', answerId);
+      
+      const obj: IQuestion = { ...question, questionAnswers: question.questionAnswers.filter((qa:IQuestionAnswer) => qa.answer.id !== answerId ) }
+      await dbp!.put('Questions', obj, questionId);
+      console.log("Question Answer successfully assigned");
+      dispatch({ type: ActionTypes.SET_QUESTION_AFTER_ASSIGN_ANSWER, payload: { question: { id: questionId, ...obj} } });
+      return obj;
+    }
+    catch (error: any) {
+      console.log('error', error);
+      dispatch({ type: ActionTypes.SET_ERROR, payload: { error } });
+    }
     // try {
     //   const url = `/api/questions/unassign-question-answer/${questionId}`
     //   const res = await axios.put(url, { answerId });

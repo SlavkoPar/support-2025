@@ -56,9 +56,9 @@ const QuestionAnswers = ({ questionId, questionTitle, questionAnswers, isDisable
     }
 
     return (
-        <div className={'mx-0 my-1 border rounded-2 px-3 py-1'} >
+        <div className={'mx-0 my-1 border rounded-2 px-3 py-1 border'} >
             <div>
-                <label>Answers</label>
+                <label className="text-info">Assigned Answers</label>
                 <ListGroup as="ul" variant={variant} className='my-1'>
                     {questionAnswers.map((questionAnswer: IQuestionAnswer) =>
                         <QuestionAnswerRow

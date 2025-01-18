@@ -227,7 +227,7 @@ export class AutoSuggestQuestions extends React.Component<{
 		if (!this.dbp || value.length < 2)
 			return;
 
-		const tx = this.dbp!.transaction(['Categories', 'Questions'], 'readwrite');
+		const tx = this.dbp!.transaction(['Categories', 'Questions'], 'readonly');
 		const index = tx.objectStore('Questions').index('words_idx');
 		const questionRows: IQuestionRow[] = [];
 		//const mapParentCategoryTitle = new Map<string, string>();
@@ -242,7 +242,7 @@ export class AutoSuggestQuestions extends React.Component<{
 				// 		await index.openCursor(word);
 				// while (cursor) {
 				// 	console.log(cursor.key, cursor.value);
-				for await (const cursor of index.iterate(searchWords[i])) {
+				for await (const cursor of index.iterate(IDBKeyRange.bound(searchWords[i], `${searchWords[i]}zzzzz`, true, true))) {
 					const q: IQuestion = { ...cursor!.value, id: parseInt(cursor!.primaryKey.toString()) }
 					const row: IQuestionRow = {
 						id: q.id!,

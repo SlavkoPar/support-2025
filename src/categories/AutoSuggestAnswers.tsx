@@ -150,7 +150,7 @@ export class AutoSuggestAnswers extends React.Component<{
 		const matches = AutosuggestHighlightMatch(suggestion.title, params.query);
 		const parts = AutosuggestHighlightParse(suggestion.title, matches);
 		return (
-			<span style={{ textAlign: 'left'}}>
+			<span style={{ textAlign: 'left' }}>
 				{parts.map((part, index) => {
 					const className = part.highlight ? 'react-autosuggest__suggestion-match' : undefined;
 					return (
@@ -226,22 +226,22 @@ export class AutoSuggestAnswers extends React.Component<{
 	protected async onSuggestionsFetchRequested({ value }: any): Promise<void> {
 		if (!this.dbp || value.length < 2)
 			return;
-
-		const tx = this.dbp!.transaction(['Groups', 'Answers'], 'readwrite');
+		const tx = this.dbp!.transaction(['Groups', 'Answers'], 'readonly');
 		const index = tx.objectStore('Answers').index('words_idx');
 		const answerRows: IAnswerRow[] = [];
 		//const mapParentGroupTitle = new Map<string, string>();
 
 		try {
 			//const search = encodeURIComponent(value.trim().replaceAll('?', ''));
-			const searchWords = value.toLowerCase().replaceAll('?', '').split(' ').map((s:string) => s.trim());
+			const searchWords = value.toLowerCase().replaceAll('?', '').split(' ').map((s: string) => s.trim());
 			let i = 0;
 			while (i < searchWords.length) {
 				// let cursor: IDBPCursorWithValue<unknown, string[], "Answers", "words_idx", "readwrite">|null = 
 				// 		await index.openCursor(word);
 				// while (cursor) {
 				// 	console.log(cursor.key, cursor.value);
-				for await (const cursor of index.iterate(searchWords[i])) {
+				// for await (const cursor of index.iterate(searchWords[i])) {
+				for await (const cursor of index.iterate(IDBKeyRange.bound(searchWords[i], `${searchWords[i]}zzzzz`, true, true))) {
 					const q: IAnswer = { ...cursor!.value, id: parseInt(cursor!.primaryKey.toString()) }
 					const row: IAnswerRow = {
 						id: q.id!,
@@ -269,7 +269,7 @@ export class AutoSuggestAnswers extends React.Component<{
 		try {
 			const groupsStore = tx.objectStore('Groups')
 			const mapParentGroupTitle = new Map<string, string>();
-			let i = 0; 
+			let i = 0;
 			while (i < answerRows.length) {
 				const row = answerRows[i];
 				if (!mapParentGroupTitle.has(row.parentGroup)) {

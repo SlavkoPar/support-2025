@@ -2,7 +2,7 @@ import React from 'react';
 import { useEffect, useRef } from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { Form, CloseButton, Row, Col } from "react-bootstrap";
+import { Form, CloseButton, Row, Col, Stack } from "react-bootstrap";
 import { CreatedModifiedForm } from "common/CreateModifiedForm"
 import { FormButtons } from "common/FormButtons"
 import { ActionTypes, FormMode, ICategory, IQuestion, IQuestionFormProps } from "categories/types";
@@ -80,48 +80,58 @@ const QuestionForm = ({ mode, question, submitForm, children, showCloseButton, c
   }
 
   return (
-    <div className="form-wrapper px-3 py-1 my-0 my-1 w-100" data-bs-theme={`${isDarkMode ?'dark':'light'}`}>
+    <div className="form-wrapper px-3 py-1 my-0 my-1 w-100" data-bs-theme={`${isDarkMode ? 'dark' : 'light'}`}>
       {showCloseButton && <CloseButton onClick={closeForm} className="float-end" />}
+      <Row className='text-center'>
+        <Form.Label>Question</Form.Label>
+      </Row>
       <Form onSubmit={formik.handleSubmit}>
 
-        <Form.Label>Category</Form.Label>
-        <Form.Group controlId="parentCategory" className="category-select form-select-sm">
-          <Dropdown>
-            <Dropdown.Toggle variant="light" id="dropdown-basic" className="px-2 py-1 text-primary" disabled={isDisabled}>
-              {formik.values.categoryTitle}
-            </Dropdown.Toggle>
-            <Dropdown.Menu className="p-0">
-              <Dropdown.Item className="p-0 m-0 rounded-3">
-                <CatList
-                  parentCategory='null'
-                  level={1}
-                  setParentCategory={setParentCategory}
-                />
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+        <Stack direction="horizontal" gap={0}>
+          <div className="p-2"><Form.Label>Category:</Form.Label></div>
+          <div className="p-2">
+            <Form.Group controlId="parentCategory" className="category-select form-select-sm">
+            <Dropdown>
+              <Dropdown.Toggle variant="light" id="dropdown-basic" className="px-2 py-0 text-primary" disabled={isDisabled}>
+                {formik.values.categoryTitle}
+              </Dropdown.Toggle>
+              <Dropdown.Menu className="p-0">
+                <Dropdown.Item className="p-0 m-0 rounded-3">
+                  <CatList
+                    parentCategory='null'
+                    level={1}
+                    setParentCategory={setParentCategory}
+                  />
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
 
-          <Form.Control
-            as="input"
-            name="parentCategory"
-            onChange={formik.handleChange}
-            //onBlur={formik.handleBlur}
-            // onBlur={(e: React.FocusEvent<HTMLTextAreaElement>): void => {
-            //   if (isEdit && formik.initialValues.title !== formik.values.title)
-            //     formik.submitForm();
-            // }}
-            value={formik.values.parentCategory.toString()}
-            placeholder='Category'
-            className="text-primary w-100"
-            disabled={isDisabled}
-            hidden={true}
-          />
-          <Form.Text className="text-danger">
-            {formik.touched.parentCategory && formik.errors.parentCategory ? (
-              <div className="text-danger">{formik.errors.parentCategory ? 'required' : ''}</div>
-            ) : null}
-          </Form.Text>
-        </Form.Group>
+            <Form.Control
+              as="input"
+              name="parentCategory"
+              onChange={formik.handleChange}
+              //onBlur={formik.handleBlur}
+              // onBlur={(e: React.FocusEvent<HTMLTextAreaElement>): void => {
+              //   if (isEdit && formik.initialValues.title !== formik.values.title)
+              //     formik.submitForm();
+              // }}
+              value={formik.values.parentCategory.toString()}
+              placeholder='Category'
+              className="text-primary w-100"
+              disabled={isDisabled}
+              hidden={true}
+            />
+            <Form.Text className="text-danger">
+              {formik.touched.parentCategory && formik.errors.parentCategory ? (
+                <div className="text-danger">{formik.errors.parentCategory ? 'required' : ''}</div>
+              ) : null}
+            </Form.Text>
+          </Form.Group>
+
+          </div>
+        </Stack>
+
+
 
         <Form.Group controlId="title">
           <Form.Label>Title</Form.Label>
@@ -147,10 +157,6 @@ const QuestionForm = ({ mode, question, submitForm, children, showCloseButton, c
             ) : null}
           </Form.Text>
         </Form.Group>
-
-
-
-
 
         <Row>
           <Col>
@@ -201,8 +207,6 @@ const QuestionForm = ({ mode, question, submitForm, children, showCloseButton, c
         </Row>
         <br />
 
-
-
         {(viewing || editing) &&
           <>
             <QuestionAnswers
@@ -211,7 +215,6 @@ const QuestionForm = ({ mode, question, submitForm, children, showCloseButton, c
               questionAnswers={questionAnswers}
               isDisabled={isDisabled}
             />
-            <label>Question Answers</label>
 
             <CreatedModifiedForm
               created={question.created}
