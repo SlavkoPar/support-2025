@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/support-2025/static/css/main.f3a71449.css",
-    "main.js": "/support-2025/static/js/main.2a02560e.js",
-    "static/media/image5.png": "/support-2025/static/media/image5.754f84fe879281ab860b.png",
-    "static/media/image4.png": "/support-2025/static/media/image4.77c263e4ad30f938bb15.png",
-    "static/media/image3.png": "/support-2025/static/media/image3.7d8621b550adf6f3d01e.png",
-    "static/media/image2.png": "/support-2025/static/media/image2.899b0b01bfb7bcaf470f.png",
-    "static/media/image1.png": "/support-2025/static/media/image1.84e62a86d24652f89b3a.png",
-    "static/media/Q.png": "/support-2025/static/media/Q.4209512a2ea1935c338f.png",
-    "static/media/QPlus.png": "/support-2025/static/media/QPlus.a9d1719c7a50e21d3475.png",
-    "static/media/A.png": "/support-2025/static/media/A.69d84f9a4d04ea1e54d4.png",
-    "static/media/APlus.png": "/support-2025/static/media/APlus.4175ba6e7cd5b00fff39.png",
-    "index.html": "/support-2025/index.html",
-    "main.f3a71449.css.map": "/support-2025/static/css/main.f3a71449.css.map",
-    "main.2a02560e.js.map": "/support-2025/static/js/main.2a02560e.js.map"
+    "main.css": "/support-2025/supporter/static/css/main.f3a71449.css",
+    "main.js": "/support-2025/supporter/static/js/main.ccc80a6e.js",
+    "static/media/image5.png": "/support-2025/supporter/static/media/image5.754f84fe879281ab860b.png",
+    "static/media/image4.png": "/support-2025/supporter/static/media/image4.77c263e4ad30f938bb15.png",
+    "static/media/image3.png": "/support-2025/supporter/static/media/image3.7d8621b550adf6f3d01e.png",
+    "static/media/image2.png": "/support-2025/supporter/static/media/image2.899b0b01bfb7bcaf470f.png",
+    "static/media/image1.png": "/support-2025/supporter/static/media/image1.84e62a86d24652f89b3a.png",
+    "static/media/Q.png": "/support-2025/supporter/static/media/Q.4209512a2ea1935c338f.png",
+    "static/media/QPlus.png": "/support-2025/supporter/static/media/QPlus.a9d1719c7a50e21d3475.png",
+    "static/media/A.png": "/support-2025/supporter/static/media/A.69d84f9a4d04ea1e54d4.png",
+    "static/media/APlus.png": "/support-2025/supporter/static/media/APlus.4175ba6e7cd5b00fff39.png",
+    "index.html": "/support-2025/supporter/index.html",
+    "main.f3a71449.css.map": "/support-2025/supporter/static/css/main.f3a71449.css.map",
+    "main.ccc80a6e.js.map": "/support-2025/supporter/static/js/main.ccc80a6e.js.map"
   },
   "entrypoints": [
     "static/css/main.f3a71449.css",
-    "static/js/main.2a02560e.js"
+    "static/js/main.ccc80a6e.js"
   ]
 }
