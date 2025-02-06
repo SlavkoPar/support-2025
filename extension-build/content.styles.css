@@ -1,0 +1,27 @@
+/* cccolor: #03A9F4; */
+
+.question-finder {  /*.question-finder:hover {*/
+    display: inline-flex;
+    align-items: center;
+    -webkit-font-smoothing: antialiased;
+    font-family: 'Google Sans', Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
+    font-size: 1rem;
+    font-variant-ligatures: no-contextual;
+    color: #202124;
+    font-weight: 400;
+    cursor: pointer;
+    line-height: 24px;
+    min-height: 24px;
+    vertical-align: middle;
+  }
+
+  .question-finder > img {
+      width: 20px;
+      height: 20px;
+      top: 0ex !important;
+      padding: 0px 0px;
+  }
+
+  .question-finder > span {
+    top: 0ex !important;
+}
