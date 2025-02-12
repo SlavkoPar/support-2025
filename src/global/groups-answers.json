@@ -1,122 +1,103 @@
 [
   {
     "id": "PRODAJA",
-    "title": "Prodaja",
-    "groups": [
-    ]
+    "title": "Prodaja"
   },
   {
     "id": "RACUNI",
-    "title": "Računi i naplata",
-    "groups": [
-    ]
+    "title": "Računi i naplata"
   },
   {
     "id": "TECHNICAL",
     "title": "Technical Support",
-    "groups": [
+    "answers": [
       {
-        "id": "INTERNET",
-        "title": "Internet",
-        "groups": [
-          {
-            "id": "CLOUD",
-            "title": "Cloud",
-            "answers": []
-          },
-          {
-            "id": "DOMAIN",
-            "title": "Domain",
-            "answers": [
-              { "title": "Pronađite pravila za naziv domena" },
-              { "title": "Slobodno registruje internacionalni domen (.com, .net, .org, .info…)?" },
-              { "title": "Moguća je rezervacija domena pre uplate" },
-              { "title": "Prilikom registracije domena omogućavamo uslugu DNS parking domena" },
-              { "title": "Ako hoćeju mogu da postanu reseller domena, ako nećejo, nemorajo" },
-              { "title": "Samo pravna lica mogu da registruju .СРБ domen, i još poneko" },
-              { "title": "Sve Sava je koristio email na svom ćiriličnom domenu" }
-            ]
-          },
-          {
-            "id": "WEB",
-            "title": "Web hosting",
-            "answers": []
-          }
-        ]
+        "title": "Pronađite pravila za naziv domena"
       },
       {
-        "id": "TV",
-        "title": "Televizija",
-        "groups": [
-          {
-            "id": "INSTALATION",
-            "title": "Instalacija",
-            "answers": [
-              { "title": "Poveži se nekako na EON Smart Box?" },
-              { "title": "Preimenuj nekako EON Smart Box?" },
-              { "title": "Nekako Upari EON daljinski upravljač i EON" },
-              { "title": "Somehow Poveži digitalni prijemnik D3mini Smart Box?" }
-            ]
-          },
-          {
-            "id": "USAGE",
-            "title": "Usage",
-            "answers": [
-              { "title": "Nateraj EON smart box-a da reaguje" },
-              { "title": "Podesi poziciju ekrana na EON smart box-ukomande" },
-              { "title": "Podesi promena jezika titla na EON smart box-u" },
-              { "title": "Podesi zvuk na EON smart box-u" },
-              { "title": "Promeni baterije" },
-              { "title": "Idi u poslvnicu, dobićeš novi" },
-              { "title": "Evo liste poslovnica (ne standova), 'Novi Merkator', 'Ušće'" },
-              { "title": "Restartuj TV, router, D3 mini, kao što Tata prase radi" }            ]
-          },
-          {
-            "id": "CHANELINFO",
-            "title": "Informacije o kanalima",
-            "answers": [
-              { "title": "Programski vodič i pregled TV kanala na EON smart boksu, možeš preko daljinskog" },
-              { "title": "TV unazad koristiš nekako na EON smart box-u" },
-              { "title": "Roditeljskua kontrol možeš ovako preko menija ..."},
-              { "title": "Blokiram kanal, snađi se nekako"},
-              { "title": "Koristi roditeljsku kontrolu nekako, plači malo"}
-            ]
-          },
-          {
-            "id": "VIDEO",
-            "title": "Video klub",
-            "answers": [
-              { "title": "Napravi liste omiljenih TV sadržaja i kanala na EON Smart Boxu" },
-              { "title": "Glasovna pretraga filmova, kanala i sadržaja EON daljinskim upravljačem" },
-              { "title": "Gledaj Pickbox" }
-            ]
-          },
-          {
-            "id": "TV-UNAZAD",
-            "title": "TV Unazad",
-            "answers": [
-              { "title": "Okreni se unayd i gledaj" }
-            ]
-          }
-        ]
+        "title": "Slobodno registruje internacionalni domen (.com, .net, .org, .info…)?"
       },
       {
-        "id": "USLUGE",
-        "title": "Ostale usluge",
-        "answers": [
-          {
-            "title": "Does you play often?"
-          }
-        ]
+        "title": "Moguća je rezervacija domena pre uplate"
       },
       {
-        "id": "WANTED",
-        "title": "Najtraženiji odgovori",
-        "answers": [
-          { "title": "Promeni ime i lozinku svoje WiFi mreže Cisco EPC" },
-          { "title": "Skoči kroz prozor" },
-          { "title": "Plači" }
-        ]
+        "title": "Prilikom registracije domena omogućavamo uslugu DNS parking domena"
+      },
+      {
+        "title": "Ako hoćeju mogu da postanu reseller domena, ako nećejo, nemorajo"
+      },
+      {
+        "title": "Samo pravna lica mogu da registruju .СРБ domen, i još poneko"
+      },
+      {
+        "title": "Sveti Sava je koristio email na svom ćiriličnom domenu"
+      },
+      {
+        "title": "Poveži se nekako na EON Smart Box?"
+      },
+      {
+        "title": "Preimenuj nekako EON Smart Box?"
+      },
+      {
+        "title": "Nekako Upari EON daljinski upravljač i EON"
+      },
+      {
+        "title": "Somehow Poveži digitalni prijemnik D3mini Smart Box?"
+      },
+      {
+        "title": "Nateraj EON smart box-a da reaguje"
+      },
+      {
+        "title": "Podesi poziciju ekrana na EON smart box-ukomande"
+      },
+      {
+        "title": "Podesi promena jezika titla na EON smart box-u"
+      },
+      {
+        "title": "Podesi zvuk na EON smart box-u"
+      },
+      {
+        "title": "Change the bateries"
+      },
+      {
+        "title": "Got to branch office and you will get a new remote controller"
+      },
+
+      {
+        "title": "Idi u poslovnicu, dobićeš novi"
+      },
+      {
+        "title": "Evo liste poslovnica (ne standova), 'Novi Merkator', 'Ušće'"
+      },
+      {
+        "title": "Restart TV, router, D3 mini, as the Pepa Pig does"
+      },
+      {
+        "title": "Okreni se unazad i gledaj"
+      },
+      {
+        "title": "Programski vodič i pregled TV kanala na EON smart boksu, možeš preko daljinskog"
+      },
+      {
+        "title": "TV unazad koristiš nekako na EON smart box-u"
+      },
+      {
+        "title": "Roditeljskua kontrol možeš ovako preko menija ..."
+      },
+      {
+        "title": "Blokiram kanal, snađi se nekako"
+      },
+      {
+        "title": "Use parenthal control, cry a little"
+      },
+      {
+        "title": "Change name and passwerdof your WiFi network Cisco EPC"
+      },
+      {
+        "title": "Jump through the window"
+      },
+      {
+        "title": "Cry"
       }
     ]
   },

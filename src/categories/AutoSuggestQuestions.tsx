@@ -162,7 +162,7 @@ export class AutoSuggestQuestions extends React.Component<{
 				cat.words.forEach(catw => {
 					if (catw.includes(w)) {
 						console.log("Add all questions of category")
-						arr.push({ id: cat.id, title: cat.title})
+						arr.push({ id: cat.id, title: cat.title })
 					}
 				})
 			})
@@ -194,21 +194,22 @@ export class AutoSuggestQuestions extends React.Component<{
 					for await (const cursor of index.iterate(IDBKeyRange.bound(w, `${w}zzzzz`, false, true))) {
 						const q: IQuestion = { ...cursor!.value, id: parseInt(cursor!.primaryKey.toString()) }
 						const { id, parentCategory, title } = q;
-						if (!questionRows.includes(id!))
+						if (!questionRows.includes(id!)) {
 							questionRows.push(id!);
 
-						// 2) Group questions by parentCategory
-						const quest: IQuest = {
-							id: id!,
-							parentCategory,
-							title,
-							categoryTitle: ''
-						}
-						if (!catQuests.has(parentCategory)) {
-							catQuests.set(parentCategory, [quest]);
-						}
-						else {
-							catQuests.get(parentCategory)!.push(quest);
+							// 2) Group questions by parentCategory
+							const quest: IQuest = {
+								id: id!,
+								parentCategory,
+								title,
+								categoryTitle: ''
+							}
+							if (!catQuests.has(parentCategory)) {
+								catQuests.set(parentCategory, [quest]);
+							}
+							else {
+								catQuests.get(parentCategory)!.push(quest);
+							}
 						}
 					}
 				}

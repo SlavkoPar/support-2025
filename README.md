@@ -47,13 +47,14 @@ Mislim da danas ljudi više postavljaju pitanja, preko **ChatBot-a** nego putem 
 E jebiga za ovaj način trebala bi nam baza na netu, a ne lokalna.
 
 ## Svaka kategorija ima Tagove
-Pa recimo ako klijent ukuca pitanje u AutoSuggest: 'Daljinski ne radi',\
-a kategorija ima Tagove: ["MTS", "SBB", "A1", "YETTEL"], mi onda u drop-down ubacimo\
-+ Daljinski ne radi MTS
-+ Daljinski ne radi SBB
-+ Daljinski ne radi A1
-+ Daljinski ne radi YETTEL
-i tako pomažemo klijentu da brže nadje odgovor\
+When we enter question into the AutoSuggest: 'Remote controller doesn't work',\
+and category has Variations: ["MTS", "SBB", "A1", "YETTEL"],\
+then we inster the following rows into the drop-down\
++ Remote controller doesn't work MTS
++ Remote controller doesn't work SBB
++ Remote controller doesn't work A1
++ Remote controller doesn't work YETTEL
+so helpin a clinet to feasier find the answer\
 
 Takođe, ako korisnik kuca neku reč, za koju ne nalazi nijedno pitanje, ali koja se nalazi u nazivu kategorije,\
 možemo onda da ubacimo u drop-don listu sva pitanja iz te kategorije.

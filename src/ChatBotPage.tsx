@@ -39,6 +39,7 @@ const ChatBotPage: React.FC = () => {
 
 	const [autoSuggestId, setAutoSuggestId] = useState<number>(1);
 	const [answerId, setAnswerId] = useState<number>(1);
+	const [showAnswer, setShowAnswer] = useState(false);
 	const [answer, setAnswer] = useState<IAnswer | undefined>(undefined);
 	const [hasMoreAnswers, setHasMoreAnswers] = useState<boolean>(false);
 
@@ -87,8 +88,6 @@ const ChatBotPage: React.FC = () => {
 	if (catsOptions.length === 0)
 		return <div>loading...</div>
 
-
-
 	const onOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const target = event.target;
 		const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -116,11 +115,29 @@ const ChatBotPage: React.FC = () => {
 	const onSelectQuestion = async (categoryId: string, questionId: number) => {
 		// navigate(`/support-2025/categories/${categoryId}_${questionId.toString()}`)
 		// const question = await getQuestion(questionId);
+		if (answer) {
+			const props: IChild = {
+				type: ChildType.ANSWER,
+				isDisabled: true,
+				txt: answer.title,
+			}
+			setHistory((prevHistory) => [...prevHistory, props]);
+		}
 		const res: INewQuestion = await (await hook).setNewQuestion(questionId);
 		const { question, firstAnswer, hasMoreAnswers } = res; // as unknown as INewQuestion;
+		if (question) {
+			const props: IChild = {
+				type: ChildType.QUESTION,
+				isDisabled: true,
+				txt: question.title,
+			}
+			setHistory((prevHistory) => [...prevHistory, props]);
+		}
+		
 		setAutoSuggestId((autoSuggestId) => autoSuggestId + 1);
 		setShowAutoSuggest(false);
 		setSelectedQuestion(question);
+		setShowAnswer(true);
 		setHasMoreAnswers(hasMoreAnswers);
 		setAnswerId((answerId) => answerId + 1);
 		setAnswer(firstAnswer);
@@ -132,7 +149,7 @@ const ChatBotPage: React.FC = () => {
 		const props: IChild = {
 			type: ChildType.ANSWER,
 			isDisabled: true,
-			txt: answer!.title,
+			txt: answer ? answer.title : 'no answers',
 			hasMoreAnswers: true
 		}
 		setHistory((prevHistory) => [...prevHistory, props]);
@@ -144,18 +161,35 @@ const ChatBotPage: React.FC = () => {
 		setAnswer(nextAnswer);
 	}
 
+	const QuestionComponent = (props: IChild) => {
+		const { isDisabled, txt } = props;
+		return (
+			<Row className={`my-1 ${isDarkMode ? "dark" : ""} bg-secondary mx-5 border border-1 rounded-1`} id={autoSuggestId.toString()}>
+				<Col xs={0} md={3} className='mb-1'>
+				</Col>
+				<Col xs={12} md={9}>
+					<div className="d-flex justify-content-start align-items-center">
+						<div className="w-75">
+							{txt}
+						</div>
+					</div>
+				</Col>
+			</Row>
+		)
+	}
+
 	const AnswerComponent = (props: IChild) => {
 		const { isDisabled, txt } = props;
 		return (
 			<div id={answerId.toString()}>
-				<Row className={`${isDarkMode ? "dark" : "light"} border border-1 rounded-1`}>
-					<Col xs={9} md={9} classNAme={`${isDisabled ? 'secondary' : 'primary'}`}>
+				<Row className={`${isDarkMode ? "dark" : "light"} mx-6 border border-1 rounded-1`}>
+					<Col xs={7} md={7} classNAme={`${isDisabled ? 'secondary' : 'primary'}`}>
 						{txt}
 						{/* {isDisabled && txt} */}
 						{/* {!isDisabled && answer!.title} */}
 						{/* isDisabled={selectedQuestion.isDisabled} */}
 					</Col>
-					<Col xs={3} md={3}>
+					<Col xs={5} md={5}>
 						{!isDisabled && <Button
 							size="sm"
 							type="button"
@@ -171,23 +205,6 @@ const ChatBotPage: React.FC = () => {
 			</div>
 		);
 	};
-
-	const QuestionComponent = (props: IChild) => {
-		const { isDisabled, txt } = props;
-		return (
-			<Row className={`my-1 ${isDarkMode ? "dark" : ""}`} id={autoSuggestId.toString()}>
-				<Col xs={12} md={3} className='mb-1'>
-				</Col>
-				<Col xs={0} md={9}>
-					<div className="d-flex justify-content-start align-items-center">
-						<div className="w-75">
-							{txt}
-						</div>
-					</div>
-				</Col>
-			</Row>
-		)
-	}
 
 	const AutoSuggestComponent = (props: IChild) => {
 		const { isDisabled, txt } = props;
@@ -295,9 +312,15 @@ const ChatBotPage: React.FC = () => {
 				}
 			</div>
 
-			{answer &&
+			{/* {selectedQuestion &&
 				<div>
-					<AnswerComponent type={ChildType.ANSWER} isDisabled={false} txt={answer!.title} hasMoreAnswers={hasMoreAnswers} />
+					<QuestionComponent type={ChildType.QUESTION} isDisabled={true} txt={selectedQuestion.title} hasMoreAnswers={hasMoreAnswers} />
+				</div>
+			} */}
+
+			{showAnswer &&
+				<div>
+					<AnswerComponent type={ChildType.ANSWER} isDisabled={false} txt={answer ? answer.title : 'no answers'} hasMoreAnswers={hasMoreAnswers} />
 				</div>
 			}
 
@@ -306,11 +329,11 @@ const ChatBotPage: React.FC = () => {
 					variant="secondary"
 					size="sm"
 					type="button"
-					onClick={() => { 
+					onClick={() => {
 						setAutoSuggestId(autoSuggestId + 1);
 						setShowAutoSuggest(true);
 					}
-				}
+					}
 					className='m-1 border border-1 rounded-1 py-0'
 				>
 					New Question

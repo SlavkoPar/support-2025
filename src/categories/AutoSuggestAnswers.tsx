@@ -143,7 +143,7 @@ export class AutoSuggestAnswers extends React.Component<{
 				renderSuggestionsContainer={this.renderSuggestionsContainer}
 				focusInputOnSuggestionClick={!this.isMob}
 				inputProps={{
-					placeholder: `Type 'radi' or 'bat'`,
+					placeholder: `Type 'work' or 'bater'`,
 					value,
 					onChange: (e, changeEvent) => this.onChange(e, changeEvent),
 					autoFocus: true

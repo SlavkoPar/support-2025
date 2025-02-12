@@ -8,7 +8,7 @@
          "type": "chrome",
          "request": "launch",
          "name": "Launch Chrome against localhost",
-         "url": "http://localhost:3000/support-2025/ChatBotPage/2/radi/a@b.com",
+         "url": "http://localhost:3000/support-2025/ChatBotPage/2/work/a@b.com",
          "webRoot": "${workspaceFolder}"
       }
    ]

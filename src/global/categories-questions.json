@@ -68,14 +68,14 @@
             "title": "Usage",
             "kind": 3,
             "questions": [
-              { "title": "Daljinski od EON smart box-a ne reaguje" },
+              { "title": "Remote controller of EON smart box-a, doesn't work", "assignedAnswers": [16, 20, 17, 28] },
               { "title": "Podešavanje pozicije ekrana na EON smart box-ukomande" },
               { "title": "Podešavanje i promena jezika titla na EON smart box-u" },
               { "title": "Podešavanje zvuka na EON smart box-u" },
               { "title": "Pokvario mi se D3mini daljinski" },
-              { "title": "Promenio sam baterije, ali i dalje ne radi" },
+              { "title": "Changed bateries, but it still doesn't work" },
               { "title": "Dajte mi listu poslovnica (ne standova)" },
-              { "title": "Ovo ništa ne radi", "assignedAnswers": [32, 27] }            
+              { "title": "Nothing works and no one knows why", "assignedAnswers": [20, 28] }            
             ]
           },
           {
