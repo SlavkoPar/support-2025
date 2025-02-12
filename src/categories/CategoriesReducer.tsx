@@ -11,7 +11,7 @@ export const initialQuestion: IQuestion = {
   numOfAssignedAnswers: 0,
   source: 0,
   status: 0,
-  tags: []
+  variations: []
 }
 
 export const initialCategory: ICategory = {
@@ -22,7 +22,7 @@ export const initialCategory: ICategory = {
   kind: 0,
   title: '',
   level: 0,
-  tags: [],
+  variations: [],
   parentCategory: 'null',
   hasSubCategories: false,
   questions: [],
@@ -127,7 +127,7 @@ const reducer = (state: ICategoriesState, action: CategoriesActions) => {
 
     case ActionTypes.SET_PARENT_CATEGORIES: {
       const { parentNodes } = action.payload;
-      const {categoryId, questionId } = parentNodes;
+      const { categoryId, questionId } = parentNodes;
       return {
         ...state,
         parentNodes,
@@ -258,13 +258,13 @@ const reducer = (state: ICategoriesState, action: CategoriesActions) => {
       const { parentCategory, questions, hasMore } = action.payload; // category doesn't contain inViewing, inEditing, inAdding 
       const category = state.categories.find(c => c.id === parentCategory);
       //if (questions.length > 0 && category!.questions.map(q => q.id).includes(questions[0].id)) {
-        // privremeno  TODO  uradi isto i u group/answers
-        // We have, at two places:
-        //   <EditCategory inLine={true} />
-        //   <EditCategory inLine={false} />
-        //   so we execute loadCategoryQuestions() twice in QuestionList, but OK
-        // TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-        // return state;
+      // privremeno  TODO  uradi isto i u group/answers
+      // We have, at two places:
+      //   <EditCategory inLine={true} />
+      //   <EditCategory inLine={false} />
+      //   so we execute loadCategoryQuestions() twice in QuestionList, but OK
+      // TODOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+      // return state;
       //}
       const questionInAdding = category!.questions.find(q => q.inAdding);
       if (questionInAdding) {
@@ -280,8 +280,8 @@ const reducer = (state: ICategoriesState, action: CategoriesActions) => {
               ? {
                 ...q,
                 inViewing: state.mode === Mode.ViewingQuestion,
-                inEditing: state.mode === Mode.EditingQuestion 
-              } 
+                inEditing: state.mode === Mode.EditingQuestion
+              }
               : q))),
             hasMore,
             inViewing: c.inViewing,

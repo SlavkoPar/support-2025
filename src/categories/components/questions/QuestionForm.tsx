@@ -16,9 +16,9 @@ import { useCategoryDispatch } from "categories/CategoryProvider";
 import Dropdown from 'react-bootstrap/Dropdown';
 import AssignedAnswers from './AssignedAnswers';
 import { useGlobalContext } from 'global/GlobalProvider';
-import TagList from 'categories/TagList';
+import VariationList from 'categories/VariationList';
 
-const QuestionForm = ({ mode, question, submitForm, children, showCloseButton, source=0, closeModal }: IQuestionFormProps) => {
+const QuestionForm = ({ mode, question, submitForm, children, showCloseButton, source = 0, closeModal }: IQuestionFormProps) => {
 
   const { globalState } = useGlobalContext();
   const { isDarkMode, variant, bg } = globalState;

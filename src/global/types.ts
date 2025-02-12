@@ -56,7 +56,7 @@ export interface ICat {
 	title: string;
 	words: string[];
 	titlesUpTheTree: string; // traverse up the tree, until root
-	tags: string[];
+	variations: string[];
 	hasSubCategories: boolean;
 	kind: number
 }
@@ -65,7 +65,7 @@ export interface ICatExport {
 	id: string;
 	parentCategory: string;
 	title: string;
-	tags: string[];
+	variations: string[];
 	hasSubCategories: boolean;
 	kind: number
 }
@@ -258,14 +258,14 @@ export interface IQuestionData {
 	assignedAnswers?: number[];
 	source?: number;
 	status?: number;
-	tags?: string[]
+	variations?: string[]
 }
 
 export interface ICategoryData {
 	id: string;
 	title: string;
 	kind?: number;
-	tags?: string[];
+	variations?: string[];
 	categories?: ICategoryData[],
 	questions?: IQuestionData[]
 }

@@ -273,7 +273,7 @@ export const GlobalProvider: React.FC<Props> = ({ children }) => {
     level: number)
     : Promise<void> => {
     try {
-      const { id, title, kind, tags, categories, questions } = categoryData;
+      const { id, title, kind, variations, categories, questions } = categoryData;
 
       if (id === 'SAFARI') {
         const q = {
@@ -294,7 +294,7 @@ export const GlobalProvider: React.FC<Props> = ({ children }) => {
         title,
         // words: title.toLowerCase().replaceAll('?', '').split(' ').map((s: string) => s.trim()).filter(w => w.length > 1),
         level,
-        tags: tags ?? [],
+        variations: variations ?? [],
         questions: [],
         numOfQuestions: questions?.length || 0,
         created: {
@@ -342,7 +342,7 @@ export const GlobalProvider: React.FC<Props> = ({ children }) => {
               assignedAnswers: assAnswers,
               numOfAssignedAnswers: 0,
               level: 2,
-              tags: q.tags ?? []
+              variations: q.variations ?? []
             }
             console.log('-->>>', { question })
             await dbp.add('Questions', question);
@@ -437,14 +437,14 @@ export const GlobalProvider: React.FC<Props> = ({ children }) => {
       const allCategories: Map<string, ICat> = new Map<string, ICat>();
       for await (const cursor of tx.store.iterate()) {
         let category: ICategory = cursor.value;
-        const { id, parentCategory, title, tags, hasSubCategories, kind } = category;
+        const { id, parentCategory, title, variations, hasSubCategories, kind } = category;
         const cat: ICat = {
           id,
           parentCategory,
           title,
           words: title.toLowerCase().replaceAll('?', '').split(' ').map((s: string) => s.trim()).filter(w => w.length > 1),
           titlesUpTheTree: '',
-          tags,
+          variations,
           hasSubCategories,
           kind
         }
@@ -602,7 +602,7 @@ export const GlobalProvider: React.FC<Props> = ({ children }) => {
             words: [],
             parentCategory: "",
             titlesUpTheTree: "",
-            tags: [],
+            variations: [],
             hasSubCategories: false,
             kind
           }

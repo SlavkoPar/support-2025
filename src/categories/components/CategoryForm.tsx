@@ -4,12 +4,12 @@ import { useFormik } from "formik";
 import { Form, CloseButton, Row, Stack, Dropdown } from "react-bootstrap";
 import { CreatedModifiedForm } from "common/CreateModifiedForm"
 import { FormButtons } from "common/FormButtons"
-import { FormMode, ActionTypes, ICategoryFormProps, ICategory, ITag } from "categories/types";
+import { FormMode, ActionTypes, ICategoryFormProps, ICategory, IVariation } from "categories/types";
 
 import { useCategoryDispatch } from "categories/CategoryProvider";
 import QuestionList from "categories/components/questions/QuestionList";
 import { useGlobalContext } from "global/GlobalProvider";
-import TagList from "categories/TagList";
+import VariationList from "categories/VariationList";
 import { Select } from "common/components/Select";
 import { kindOptions } from "common/kindOptions ";
 
@@ -22,7 +22,7 @@ const CategoryForm = ({ inLine, mode, category, submitForm, children }: ICategor
   const editing = mode === FormMode.editing;
   const adding = mode === FormMode.adding;
 
-  const { id, title, tags, questions, kind } = category;
+  const { id, title, variations, questions, kind } = category;
 
   if (!document.getElementById('div-details')) {
 
@@ -76,7 +76,7 @@ const CategoryForm = ({ inLine, mode, category, submitForm, children }: ICategor
   }, [nameRef])
 
   const isDisabled = false;
-  
+
   return (
     <div className="form-wrapper p-2" data-bs-theme={`${isDarkMode ? 'dark' : 'light'}`}>
       <CloseButton onClick={closeForm} className="float-end" />
@@ -85,11 +85,11 @@ const CategoryForm = ({ inLine, mode, category, submitForm, children }: ICategor
       </Row>
       <Form onSubmit={formik.handleSubmit}>
 
-        <Form.Group controlId="Tags">
+        <Form.Group controlId="Variations">
           <Stack direction="horizontal" gap={1}>
-            <div className="px-0"><Form.Label>Tags:</Form.Label></div>
+            <div className="px-0"><Form.Label>Variations:</Form.Label></div>
             <div className="px-1 border border-1 border-secondary rounded">
-              <TagList categoryId={id} tags={tags.map(tag => ({ name: tag } as ITag))} />
+              <VariationList categoryId={id} variations={variations.map(variation => ({ name: variation } as IVariation))} />
             </div>
             <div className="ps-2"><Form.Label>Kind:</Form.Label></div>
             <div className="px-1 border border-1 border-secondary rounded">

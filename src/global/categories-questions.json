@@ -67,8 +67,11 @@
             "id": "USAGE",
             "title": "Usage",
             "kind": 3,
+            "variations": ["MTS", "SBB", "A1", "YETTEL"],
             "questions": [
-              { "title": "Remote controller of EON smart box-a, doesn't work", "assignedAnswers": [16, 20, 17, 28] },
+              { 
+                "title": "Remote controller of EON smart box-a, doesn't work", 
+                "assignedAnswers": [16, 20, 17, 28] },
               { "title": "Podešavanje pozicije ekrana na EON smart box-ukomande" },
               { "title": "Podešavanje i promena jezika titla na EON smart box-u" },
               { "title": "Podešavanje zvuka na EON smart box-u" },

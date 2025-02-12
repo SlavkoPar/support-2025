@@ -10,9 +10,9 @@ export const Mode = {
 	DeletingCategory: 'DeletingCategory',
 
 	// tags
-	AddingTag: 'AddingTag',
-	EditingTag: 'EditingTag',
-	ViewingTag: 'ViewingTag',
+	AddingVariation: 'AddingVariation',
+	EditingVariation: 'EditingVariation',
+	ViewingVariation: 'ViewingVariation',
 
 	//////////////////////////////////////
 	// questions
@@ -72,11 +72,11 @@ export interface IQuestion extends IRecord {
 	source: number;
 	status: number;
 	fromUserAssignedAnswer?: IFromUserAssignedAnswer[];
-	tags: string[];
+	variations: string[];
 	included?: boolean;
 }
 
-export interface ITag {
+export interface IVariation {
 	name: string;
 }
 
@@ -89,7 +89,7 @@ export interface ICategory extends IRecord {
 	title: string;
 	// words: string[];
 	level: number;
-	tags: string[];
+	variations: string[];
 	questions: IQuestion[];
 	numOfQuestions: number;
 	hasMore?: boolean;

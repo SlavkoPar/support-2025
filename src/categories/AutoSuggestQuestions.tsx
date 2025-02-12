@@ -277,7 +277,7 @@ export class AutoSuggestQuestions extends React.Component<{
 			let catSections: ICatSection[] = [];
 			catQuests.forEach((quests, categoryId) => {
 				const cat = this.allCategories.get(categoryId);
-				const { title, titlesUpTheTree, tags } = cat!;
+				const { title, titlesUpTheTree, variations } = cat!;
 				console.log(`${categoryId} = ${quests}`);
 				const catSection: ICatSection = {
 					categoryId,
@@ -288,20 +288,20 @@ export class AutoSuggestQuestions extends React.Component<{
 				};
 				quests.forEach(quest => {
 					// console.log(quest);
-					if (tags.length > 0) {
+					if (variations.length > 0) {
 						let wordsIncludesTag = false;
 						searchWords.forEach(w => {
-							tags.forEach(tag => {
-								if (tag === w.toUpperCase()) {
+							variations.forEach(variation => {
+								if (variation === w.toUpperCase()) {
 									wordsIncludesTag = true;
-									catSection.quests.push({ ...quest, title: quest.title + ' ' + tag });
+									catSection.quests.push({ ...quest, title: quest.title + ' ' + variation });
 								}
 							})
 						})
 						if (!wordsIncludesTag) {
-							tags.forEach(tag => {
+							variations.forEach(variation => {
 								// console.log(quest);
-								catSection.quests.push({ ...quest, title: quest.title + ' ' + tag });
+								catSection.quests.push({ ...quest, title: quest.title + ' ' + variation });
 							});
 						}
 					}

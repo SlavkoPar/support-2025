@@ -150,13 +150,13 @@ export const CategoryProvider: React.FC<Props> = ({ children }) => {
   }, []);
 
   const updateCategory = useCallback(async (c: ICategory, closeForm: boolean) => {
-    const { id, tags, title, kind, modified } = c;
+    const { id, variations, title, kind, modified } = c;
     dispatch({ type: ActionTypes.SET_CATEGORY_LOADING, payload: { id, loading: false } });
     try {
       const category = await dbp!.get('Categories', id);
       const obj: ICategory = {
         ...category,
-        tags,
+        variations,
         title,
         kind,
         modified
@@ -186,12 +186,12 @@ export const CategoryProvider: React.FC<Props> = ({ children }) => {
     }
   };
 
-  const deleteCategoryTag = async (id: string, tagName: string) => {
+  const deleteCategoryTag = async (id: string, variationName: string) => {
     try {
       const category = await dbp!.get('Categories', id);
       const obj: ICategory = {
         ...category,
-        tags: category.tags.filter((tag: string) => tag !== tagName),
+        variations: category.variations.filter((variation: string) => variation !== variationName),
         modified: {
           date: new Date(),
           by: {
@@ -252,7 +252,7 @@ export const CategoryProvider: React.FC<Props> = ({ children }) => {
             included = true;
           }
           questions.push({ ...cursor.value, id, included });
-          n++;         
+          n++;
           if (n >= pageSize && (includeQuestionId ? included : true)) {
             hasMore = true;
             break;
@@ -309,7 +309,7 @@ export const CategoryProvider: React.FC<Props> = ({ children }) => {
       const category: ICategory = await dbp!.get("Categories", parentCategory)
       question.id = id;
       question.categoryTitle = category.title;
-     
+
       // const { fromUserAssignedAnswer } = question;
       // if (fromUserAssignedAnswer) {
       //   question.questionAnswers.forEach(questionAnswer => {
@@ -439,7 +439,7 @@ export const CategoryProvider: React.FC<Props> = ({ children }) => {
         numOfAssignedAnswers: assignedAnswers.length
       }
       await dbp!.put('Questions', obj, questionId);
-      console.log("Question Answer successfully assigned",  obj);
+      console.log("Question Answer successfully assigned", obj);
       ///////////////////
       // newAssignedAnwser.answer.title = answer.title;
       // obj.assignedAnswers = [...question.assignedAnswers, newAssignedAnwser];;

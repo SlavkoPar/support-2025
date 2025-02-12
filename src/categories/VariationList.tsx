@@ -1,12 +1,12 @@
 import React, { forwardRef, useCallback, useEffect, useRef, useState } from "react";
-import { IParentInfo, ITag } from "categories/types";
+import { IParentInfo, IVariation } from "categories/types";
 import { useCategoryContext } from "categories/CategoryProvider";
 import { useGlobalState } from "global/GlobalProvider";
 import { List, ListItem, Loading } from "common/components/InfiniteList";
-import TagRow from "categories/TagRow";
+import VariationRow from "categories/VariationRow";
 import { ListGroup, Stack } from "react-bootstrap";
 
-const TagList = ({ categoryId, tags }: { categoryId: string, tags: ITag[] }) => {
+const VariationList = ({ categoryId, variations }: { categoryId: string, variations: IVariation[] }) => {
 
   const { canEdit } = useGlobalState();
 
@@ -38,16 +38,16 @@ const TagList = ({ categoryId, tags }: { categoryId: string, tags: ITag[] }) => 
   return (
     <div
       className="ms-2"
-      // className="max-h-[500px] max-w-[500px] overflow-auto bg-slate-100"
-      // style={{ overflowX: 'auto' }}
+    // className="max-h-[500px] max-w-[500px] overflow-auto bg-slate-100"
+    // style={{ overflowX: 'auto' }}
     >
       <Stack direction="horizontal" gap={2}>
-        {tags.length === 0 &&
-          <div>No tags</div>
+        {variations.length === 0 &&
+          <div>No variations</div>
         }
         {
-          tags.map((tag: ITag) => {
-            return <TagRow
+          variations.map((tag: IVariation) => {
+            return <VariationRow
               categoryId={categoryId}
               tag={tag}
               categoryInAdding={undefined}
@@ -59,4 +59,4 @@ const TagList = ({ categoryId, tags }: { categoryId: string, tags: ITag[] }) => 
   );
 };
 
-export default TagList;
+export default VariationList;

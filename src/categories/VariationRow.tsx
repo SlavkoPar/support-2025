@@ -8,22 +8,22 @@ import { useGlobalState } from 'global/GlobalProvider'
 import { ActionTypes, ICategoryInfo, Mode } from "categories/types";
 import { useCategoryContext, useCategoryDispatch } from 'categories/CategoryProvider'
 import { useHover } from 'common/components/useHover';
-import { ITag } from 'categories/types'
+import { IVariation } from 'categories/types'
 
 // import AddTag from "categorys/components/tags/AddTag";
 // import EditTag from "categorys/components/tags/EditTag";
 // import ViewTag from "categorys/components/tags/ViewTag";
 
-//const TagRow = ({ tag, categoryInAdding }: { ref: React.ForwardedRef<HTMLLIElement>, tag: ITag, categoryInAdding: boolean | undefined }) => {
-const TagRow = ({ categoryId, tag, categoryInAdding }: { categoryId: string, tag: ITag, categoryInAdding: boolean | undefined }) => {
+//const TagRow = ({ tag, categoryInAdding }: { ref: React.ForwardedRef<HTMLLIElement>, tag: IVariation, categoryInAdding: boolean | undefined }) => {
+const VariationRow = ({ categoryId, tag, categoryInAdding }: { categoryId: string, tag: IVariation, categoryInAdding: boolean | undefined }) => {
     const { name } = tag;
     const { id, parentCategory, level, inViewing, inEditing, inAdding, numOfTags } = {
-        id: 0, 
-        parentCategory:'', 
-        level:0,
+        id: 0,
+        parentCategory: '',
+        level: 0,
         inViewing: false,
         inEditing: false,
-        inAdding: false, 
+        inAdding: false,
         numOfTags: 4
     };
 
@@ -47,9 +47,9 @@ const TagRow = ({ categoryId, tag, categoryInAdding }: { categoryId: string, tag
     const onSelectTag = (id: number) => {
         // Load data from server and reinitialize tag
         //if (canEdit)
-            //editTag(id);
+        //editTag(id);
         //else
-            //viewTag(id);
+        //viewTag(id);
     }
 
     const [hoverRef, hoverProps] = useHover();
@@ -61,7 +61,7 @@ const TagRow = ({ categoryId, tag, categoryInAdding }: { categoryId: string, tag
             <Badge pill bg="secondary">
                 {/* className={`text-info ${numOfTags === 0 ? 'd-none' : 'd-inline'}`} */}
                 {name}
-            </Badge> 
+            </Badge>
 
             {/* <Button
                 variant='link'
@@ -110,15 +110,15 @@ const TagRow = ({ categoryId, tag, categoryInAdding }: { categoryId: string, tag
         </div>
 
     return (
-  
+
         <div className="py-1 px-1">
-            {inAdding && categoryInAdding && state.mode === Mode.AddingTag 
-            ? (
-                // <AddTag tag={tag} inLine={true} showCloseButton={true} />
-                <span>add tag</span>
-            )
-                : ((inEditing && state.mode === Mode.EditingTag) ||
-                    (inViewing && state.mode === Mode.ViewingTag)) ? (
+            {inAdding && categoryInAdding && state.mode === Mode.AddingVariation
+                ? (
+                    // <AddTag tag={tag} inLine={true} showCloseButton={true} />
+                    <span>add tag</span>
+                )
+                : ((inEditing && state.mode === Mode.EditingVariation) ||
+                    (inViewing && state.mode === Mode.ViewingVariation)) ? (
                     <>
                         {/* <div class="d-lg-none">hide on lg and wider screens</div> */}
                         <div id='div-tag' className="ms-0 d-md-none w-100">
@@ -134,8 +134,8 @@ const TagRow = ({ categoryId, tag, categoryInAdding }: { categoryId: string, tag
                         Row1
                     )
             }
-            </div>
+        </div>
     );
 };
 
-export default TagRow;
+export default VariationRow;

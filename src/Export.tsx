@@ -21,7 +21,7 @@ const Export: React.FC<IExport> = (props: IExport) => {
     parentCategory: "",
     title: "",
     level: 0,
-    tags: [],
+    variations: [],
     questions: [],
     numOfQuestions: 0,
     hasSubCategories: true,
@@ -30,7 +30,7 @@ const Export: React.FC<IExport> = (props: IExport) => {
 
   let fName = ''
 
-   useEffect(() => {
+  useEffect(() => {
 
     (async () => {
       await exportToJSON(category, 'null');
@@ -39,7 +39,7 @@ const Export: React.FC<IExport> = (props: IExport) => {
       const s = (new Date).toJSON();
       const part = s.split('.')[0]
       fName = `support-knowledge-${part}.json`
-      var blob = new Blob([JSON.stringify(category, null, '\t')], {type: "application/json;charset=utf-8"});
+      var blob = new Blob([JSON.stringify(category, null, '\t')], { type: "application/json;charset=utf-8" });
       FileSaver.saveAs(blob, fName);
     })()
   }, [exportToJSON])
