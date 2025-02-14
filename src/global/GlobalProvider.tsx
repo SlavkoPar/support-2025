@@ -9,7 +9,9 @@ import {
   ICat,
   IParentInfo,
   IDateAndBy,
-  ICatExport
+  ICatExport,
+  IHistory, IHistoryData,
+  IAnswerRating
 } from 'global/types'
 
 import { globalReducer, initialGlobalState } from "global/globalReducer";
@@ -26,6 +28,7 @@ import { escapeRegexCharacters } from 'common/utilities'
 import categoryData from './categories-questions.json';
 import groupData from './groups-answers.json';
 import roleData from './roles-users.json';
+import historyData from './history.json';
 
 const GlobalContext = createContext<IGlobalContext>({} as any);
 const GlobalDispatchContext = createContext<Dispatch<any>>(() => null);
@@ -72,7 +75,8 @@ export const GlobalProvider: React.FC<Props> = ({ children }) => {
         email,
         color,
         confirmed: isOwner ? true : confirmed,
-        isDarkMode: true
+        isDarkMode: true,
+        archived: false
       }
       if (!isOwner) {
         await dbp!.add('Users', user);
@@ -164,6 +168,7 @@ export const GlobalProvider: React.FC<Props> = ({ children }) => {
           nickName: 'Boss'
         }
       },
+      archived: false
     }
     await dbp.add('Roles', r);
     console.log('group added', r);
@@ -184,7 +189,8 @@ export const GlobalProvider: React.FC<Props> = ({ children }) => {
           color,
           level: 2,
           confirmed: false,
-          isDarkMode: true
+          isDarkMode: true,
+          archived: false
         }
         await dbp.add('Users', user);
         i++;
@@ -225,6 +231,7 @@ export const GlobalProvider: React.FC<Props> = ({ children }) => {
           nickName: 'Boss'
         }
       },
+      archived: false
     }
     await dbp.add('Groups', g);
     console.log('--->group added', g);
@@ -245,7 +252,8 @@ export const GlobalProvider: React.FC<Props> = ({ children }) => {
           words: words.filter(w => w.length > 1),
           source: source ?? 0,
           status: status ?? 0,
-          level: 2
+          level: 2,
+          archived: false
         }
         console.log('========>>>>>>', { answer })
         await dbp.add('Answers', answer);
@@ -303,6 +311,7 @@ export const GlobalProvider: React.FC<Props> = ({ children }) => {
             nickName: 'Boss'
           }
         },
+        archived: false
       }
       await dbp.add('Categories', cat);
       console.log('category added', cat);
@@ -342,7 +351,8 @@ export const GlobalProvider: React.FC<Props> = ({ children }) => {
               assignedAnswers: assAnswers,
               numOfAssignedAnswers: 0,
               level: 2,
-              variations: q.variations ?? []
+              variations: q.variations ?? [],
+              archived: false
             }
             console.log('-->>>', { question })
             await dbp.add('Questions', question);
@@ -428,7 +438,25 @@ export const GlobalProvider: React.FC<Props> = ({ children }) => {
     catch (err) {
       console.log('error', err);
     }
-    //})
+
+    // History
+    // try {
+    //   let i = 0;
+    //   const data: IHistoryData[] = historyData;
+    //   const tx = dbp.transaction('History', 'readwrite');
+    //   while (i < data.length) {
+    //     const row = data[i];
+    //     if (!row.created)
+    //       row.created = new Date();
+    //     await addHistory(dbp, {...row} as IHistory);
+    //     i++;
+    //   }
+    //   await tx.done;
+    // }
+    // catch (err) {
+    //   console.log('error', err);
+
+    // }
   }
 
   const loadAllCategories = useCallback(async (dbp: IDBPDatabase): Promise<any> => {
@@ -513,6 +541,14 @@ export const GlobalProvider: React.FC<Props> = ({ children }) => {
           userStore.createIndex('words_idx', 'words', { multiEntry: true, unique: false });
           userStore.createIndex('parentRole_nickName_idx', ['parentRole', 'nickName'], { unique: true });
           userStore.createIndex('parentRole_idx', 'parentRole', { unique: false });
+
+          // History
+          const historyStore = db.createObjectStore('History', { autoIncrement: true });
+          historyStore.createIndex('conversation_idx', 'conversation', { unique: false }); // used for getLastConversation
+          historyStore.createIndex('conversation_question_idx', ['conversation', 'questionId'], { unique: false });
+          historyStore.createIndex('question_answer_idx', ['questionId', 'answerId'], { unique: false });
+          historyStore.createIndex('question_conversation_answer_idx', ['questionId', 'conversation', 'answerId'], { unique: false });
+          historyStore.createIndex('question_conversation_idx', ['questionId', 'conversation'], { unique: false });
 
           initializeData = true;
         },
@@ -729,11 +765,58 @@ export const GlobalProvider: React.FC<Props> = ({ children }) => {
   };
 
 
+  const getMaxConversation = async (dbp: IDBPDatabase): Promise<number> => {
+    const tx = dbp!.transaction('History', 'readonly');
+    var index = tx.store.index('conversation_idx');
+    var req = await index.openCursor(null, 'prev');
+    return (req === null)
+      ? 1000
+      : parseInt(req.key.toString())
+  }
+
+  const addHistory = async (dbp: IDBPDatabase | null, history: IHistory): Promise<void> => {
+    if (!dbp) {
+      dbp = globalState.dbp;
+    }
+    const { conversation, client, questionId, answerId, created } = history;
+    await dbp!.add('History', {
+      conversation,
+      client,
+      questionId,
+      answerId,
+      created
+    });
+    Promise.resolve();
+  }
+
+  const getAnswersRated = async (dbp: IDBPDatabase | null, questionId: number): Promise<Map<number, IAnswerRating>> => {
+    if (!dbp) {
+      dbp = globalState.dbp;
+    }
+    const tx = dbp!.transaction(['History', 'Answers'], 'readonly');
+    const index = tx.objectStore('History').index('question_conversation_answer_idx');
+    const map = new Map<number, IAnswerRating>();
+    for await (const cursor of index.iterate(IDBKeyRange.bound([questionId, 1000, 0], [questionId, 999999, 999999], false, true))) {
+      const history: IHistory = cursor!.value;
+      const { answerId /*, clickedNotFixed*/ } = history;
+      if (!map.has(answerId)) {
+        map.set(answerId, { rate: 1, rateNotFixed: 0 });
+      }
+      else {
+        const answerRating = map.get(answerId);
+        map.set(answerId, { rate: answerRating!.rate + 1, rateNotFixed: 0 });
+      }
+    }
+    return map;
+  }
+
+
 
   return (
     <GlobalContext.Provider value={{
       globalState, OpenDB, loadAllCategories, registerUser, signInUser, getUser, exportToJSON, health,
-      getSubCats, getCatsByKind, getQuestion, joinAssignedAnswers, getAnswer
+      getSubCats, getCatsByKind, getQuestion, joinAssignedAnswers, getAnswer, 
+      getMaxConversation, addHistory, getAnswersRated
     }}>
       <GlobalDispatchContext.Provider value={dispatch}>
         {children}

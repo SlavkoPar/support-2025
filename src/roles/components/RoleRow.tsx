@@ -91,7 +91,7 @@ const RoleRow = ({ role }: { role: IRole }) => {
                 </Button>
             } */}
 
-            {canEdit && !alreadyAdding && hoverProps.isHovered &&
+            {canEdit && !alreadyAdding && hoverProps.isHovered && numOfUsers === 0 &&
                 <Button variant='link' size="sm" className="ms-1 py-0 mx-1"
                     onClick={del}
                 >

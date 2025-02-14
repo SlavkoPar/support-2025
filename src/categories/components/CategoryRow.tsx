@@ -95,7 +95,8 @@ const CategoryRow = ({ category }: { category: ICategory }) => {
                 </Button>
             } */}
 
-            {canEdit && !alreadyAdding && hoverProps.isHovered &&
+            {/* TODO what about archive questions */}
+            {canEdit && !alreadyAdding && hoverProps.isHovered && numOfQuestions === 0 && 
                 <div className="position-absolute d-flex align-items-center top-0 end-0">
                     <Button variant='link' size="sm" className="py-0 mx-1 float-end"
                         onClick={del}

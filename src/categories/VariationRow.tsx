@@ -30,13 +30,13 @@ const VariationRow = ({ categoryId, tag, categoryInAdding }: { categoryId: strin
     const { canEdit, isDarkMode, variant, bg } = useGlobalState();
 
     // const { state, viewTag, editTag, deleteTag } = useCategoryContext();
-    const { state, deleteCategoryTag } = useCategoryContext();
+    const { state, deleteCategoryVariation } = useCategoryContext();
     const dispatch = useCategoryDispatch();
 
     const alreadyAdding = false //state.mode === Mode.AddingTag;
 
     const del = () => {
-        deleteCategoryTag(categoryId, name);
+        deleteCategoryVariation(categoryId, name);
     };
 
     const edit = (id: number) => {

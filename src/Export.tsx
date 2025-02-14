@@ -25,7 +25,8 @@ const Export: React.FC<IExport> = (props: IExport) => {
     questions: [],
     numOfQuestions: 0,
     hasSubCategories: true,
-    categories: []
+    categories: [],
+    archived: false
   };
 
   let fName = ''

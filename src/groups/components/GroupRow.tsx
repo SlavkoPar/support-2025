@@ -95,7 +95,7 @@ const GroupRow = ({ group }: { group: IGroup }) => {
                 </Button>
             } */}
 
-            {canEdit && !alreadyAdding && hoverProps.isHovered &&
+            {canEdit && !alreadyAdding && hoverProps.isHovered && numOfAnswers === 0 &&
                 <Button variant='link' size="sm" className="ms-1 py-0 mx-1"
                     onClick={del}
                 >

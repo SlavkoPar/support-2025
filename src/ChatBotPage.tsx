@@ -16,6 +16,9 @@ import { INewQuestion, INextAnswer, useAI } from './useAI'
 import { IAnswer } from 'groups/types';
 import AnswerList from 'groups/components/answers/AnswerList';
 
+import Q from 'assets/Q.png';
+import A from 'assets/A.png';
+
 type ChatBotParams = {
 	source: string;
 	tekst: string;
@@ -42,8 +45,9 @@ const ChatBotPage: React.FC = () => {
 	const [showAnswer, setShowAnswer] = useState(false);
 	const [answer, setAnswer] = useState<IAnswer | undefined>(undefined);
 	const [hasMoreAnswers, setHasMoreAnswers] = useState<boolean>(false);
+	const [conversation, setConversation] = useState<number|undefined>(undefined);
 
-	const { getCatsByKind } = useGlobalContext();
+	const { getCatsByKind, getMaxConversation, addHistory, getAnswersRated } = useGlobalContext();
 	const { dbp, canEdit, authUser, isDarkMode, variant, bg, allCategories } = useGlobalState();
 
 	const setParentCategory = (cat: ICategory) => {
@@ -61,7 +65,7 @@ const ChatBotPage: React.FC = () => {
 	const [catsUsageSel, setCatUsageSel] = useState<Map<string, boolean>>(new Map<string, boolean>());
 
 
-	const [history, setHistory] = useState<IChild[]>([]);
+	const [pastEvents, setPastEvents] = useState<IChild[]>([]);
 
 	enum ChildType {
 		AUTO_SUGGEST,
@@ -115,25 +119,34 @@ const ChatBotPage: React.FC = () => {
 	const onSelectQuestion = async (categoryId: string, questionId: number) => {
 		// navigate(`/support-2025/categories/${categoryId}_${questionId.toString()}`)
 		// const question = await getQuestion(questionId);
+		let conv = conversation;
+		if (!conversation) {
+			const last = await getMaxConversation(dbp!);
+			conv = last + 1
+			setConversation(conv);
+		}
+		
 		if (answer) {
 			const props: IChild = {
 				type: ChildType.ANSWER,
 				isDisabled: true,
 				txt: answer.title,
 			}
-			setHistory((prevHistory) => [...prevHistory, props]);
+			setPastEvents((prevEvents) => [...prevEvents, props]);
 		}
 		const res: INewQuestion = await (await hook).setNewQuestion(questionId);
 		const { question, firstAnswer, hasMoreAnswers } = res; // as unknown as INewQuestion;
+		const answersRated = await getAnswersRated(dbp, question!.id!);
+		console.log({answersRated});
 		if (question) {
 			const props: IChild = {
 				type: ChildType.QUESTION,
 				isDisabled: true,
 				txt: question.title,
 			}
-			setHistory((prevHistory) => [...prevHistory, props]);
+			setPastEvents((prevEvents) => [...prevEvents, props]);
 		}
-		
+
 		setAutoSuggestId((autoSuggestId) => autoSuggestId + 1);
 		setShowAutoSuggest(false);
 		setSelectedQuestion(question);
@@ -141,6 +154,15 @@ const ChatBotPage: React.FC = () => {
 		setHasMoreAnswers(hasMoreAnswers);
 		setAnswerId((answerId) => answerId + 1);
 		setAnswer(firstAnswer);
+		if (firstAnswer) {
+			addHistory(dbp, {
+				conversation: conv,
+				client: authUser.nickName,
+				questionId: question!.id!,
+				answerId: firstAnswer.id!,
+				created: new Date()
+			})
+		}
 	}
 
 	const getNextAnswer = async () => {
@@ -152,10 +174,18 @@ const ChatBotPage: React.FC = () => {
 			txt: answer ? answer.title : 'no answers',
 			hasMoreAnswers: true
 		}
-		setHistory((prevHistory) => [...prevHistory, props]);
+		setPastEvents((prevHistory) => [...prevHistory, props]);
 
 		const { nextAnswer, hasMoreAnswers } = next;
-
+		if (nextAnswer) {
+			addHistory(dbp, {
+				conversation,
+				client: authUser.nickName,
+				questionId: selectedQuestion!.id!,
+				answerId: nextAnswer.id!,
+				created: new Date()
+			})
+		}
 		setHasMoreAnswers(hasMoreAnswers);
 		setAnswerId((answerId) => answerId + 1);
 		setAnswer(nextAnswer);
@@ -164,14 +194,18 @@ const ChatBotPage: React.FC = () => {
 	const QuestionComponent = (props: IChild) => {
 		const { isDisabled, txt } = props;
 		return (
-			<Row className={`my-1 ${isDarkMode ? "dark" : ""} bg-secondary mx-5 border border-1 rounded-1`} id={autoSuggestId.toString()}>
+			<Row
+				className={`my-1 bg-warning text-dark mx-1 border border-1 rounded-1`}
+				id={autoSuggestId.toString()}
+			>
 				<Col xs={0} md={3} className='mb-1'>
 				</Col>
 				<Col xs={12} md={9}>
 					<div className="d-flex justify-content-start align-items-center">
-						<div className="w-75">
-							{txt}
-						</div>
+						{/* <div className="w-75"> */}
+						<img width="22" height="18" src={Q} alt="Question" className='me-1' />
+						{txt}
+						{/* </div> */}
 					</div>
 				</Col>
 			</Row>
@@ -181,21 +215,23 @@ const ChatBotPage: React.FC = () => {
 	const AnswerComponent = (props: IChild) => {
 		const { isDisabled, txt } = props;
 		return (
-			<div id={answerId.toString()}>
-				<Row className={`${isDarkMode ? "dark" : "light"} mx-6 border border-1 rounded-1`}>
-					<Col xs={7} md={7} classNAme={`${isDisabled ? 'secondary' : 'primary'}`}>
-						{txt}
-						{/* {isDisabled && txt} */}
-						{/* {!isDisabled && answer!.title} */}
-						{/* isDisabled={selectedQuestion.isDisabled} */}
-					</Col>
-					<Col xs={5} md={5}>
+			<div 
+				id={answerId.toString()}
+				className={`${isDarkMode ? "dark" : "light"} mx-6 border border-1 rounded-1`}
+			>
+				<Row>
+					<Col xs={12} md={12} className={`${isDisabled ? 'secondary' : 'primary'} d-flex justify-content-start align-items-center`}>
+						<img width="22" height="18" src={A} alt="Answer" className='m-2' />
+						{/* contentEditable="true" aria-multiline="true" */}
+						<div>
+							{txt}
+						</div>
 						{!isDisabled && <Button
 							size="sm"
 							type="button"
 							onClick={getNextAnswer}
 							disabled={!hasMoreAnswers}
-							className='align-middle m-1 border border-1 rounded-1 py-0'
+							className='align-middle mx-2 border border-1 rounded-1 py-0'
 						>
 							Haven't fixed!
 						</Button>
@@ -209,7 +245,7 @@ const ChatBotPage: React.FC = () => {
 	const AutoSuggestComponent = (props: IChild) => {
 		const { isDisabled, txt } = props;
 		return (
-			<Row className={`my-1 ${isDarkMode ? "dark" : ""}`} id={tekst}>
+			<Row className={`my-1 ${isDarkMode ? "dark" : ""}`} key={autoSuggestId}>
 				<Col xs={12} md={3} className='mb-1'>
 					<label className="text-info">Please enter the Question</label>
 					{/* <CatList
@@ -297,7 +333,7 @@ const ChatBotPage: React.FC = () => {
 
 			<div className='history'>
 				{
-					history.map(childProps => {
+					pastEvents.map(childProps => {
 						switch (childProps.type) {
 							case ChildType.AUTO_SUGGEST:
 								return <AutoSuggestComponent {...childProps} />;

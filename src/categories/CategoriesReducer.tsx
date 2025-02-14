@@ -11,7 +11,8 @@ export const initialQuestion: IQuestion = {
   numOfAssignedAnswers: 0,
   source: 0,
   status: 0,
-  variations: []
+  variations: [],
+  archived: false
 }
 
 export const initialCategory: ICategory = {
@@ -29,6 +30,7 @@ export const initialCategory: ICategory = {
   numOfQuestions: 0,
   hasMore: false,
   isExpanded: false,
+  archived: false
 }
 
 export const initialState: ICategoriesState = {

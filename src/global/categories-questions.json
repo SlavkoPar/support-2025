@@ -67,7 +67,6 @@
             "id": "USAGE",
             "title": "Usage",
             "kind": 3,
-            "variations": ["MTS", "SBB", "A1", "YETTEL"],
             "questions": [
               { 
                 "title": "Remote controller of EON smart box-a, doesn't work", 
@@ -96,6 +95,7 @@
           {
             "id": "VIDEO",
             "title": "Video klub",
+            "variations": ["MTS", "SBB", "A1", "YETTEL"],
             "questions": [
               { "title": "Napravi liste omiljenih TV sadržaja i kanala na EON Smart Boxu" },
               { "title": "Glasovna pretraga filmova, kanala i sadržaja EON daljinskim upravljačem" },

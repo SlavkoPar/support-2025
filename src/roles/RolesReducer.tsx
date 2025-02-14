@@ -16,7 +16,8 @@ export const initialUser: IUser = {
   roleTitle: '',
   level: 1,
   confirmed: true,
-  isDarkMode: true
+  isDarkMode: true,
+  archived: false
 }
 
 export const initialRole: IRole = {
@@ -31,6 +32,7 @@ export const initialRole: IRole = {
   numOfUsers: 0,
   hasMore: false,
   isExpanded: false,
+  archived: false
 }
 
 export const initialState: IRolesState = {

@@ -136,7 +136,7 @@ export interface ICategoriesContext {
 	editCategory: (id: string) => void,
 	updateCategory: (category: ICategory, closeForm: boolean) => void,
 	deleteCategory: (id: string) => void,
-	deleteCategoryTag: (id: string, name: string) => void,
+	deleteCategoryVariation: (id: string, name: string) => void,
 	expandCategory: (category: ICategory, expand: boolean) => void,
 	//////////////
 	// questions

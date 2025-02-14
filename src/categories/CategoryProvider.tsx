@@ -186,7 +186,7 @@ export const CategoryProvider: React.FC<Props> = ({ children }) => {
     }
   };
 
-  const deleteCategoryTag = async (id: string, variationName: string) => {
+  const deleteCategoryVariation = async (id: string, variationName: string) => {
     try {
       const category = await dbp!.get('Categories', id);
       const obj: ICategory = {
@@ -551,7 +551,7 @@ export const CategoryProvider: React.FC<Props> = ({ children }) => {
 
   const contextValue: ICategoriesContext = {
     state, reloadCategoryNode,
-    getSubCategories, createCategory, viewCategory, editCategory, updateCategory, deleteCategory, deleteCategoryTag,
+    getSubCategories, createCategory, viewCategory, editCategory, updateCategory, deleteCategory, deleteCategoryVariation,
     expandCategory, loadCategoryQuestions, createQuestion, viewQuestion, editQuestion, updateQuestion, deleteQuestion,
     assignQuestionAnswer, unAssignQuestionAnswer, createAnswer
   }

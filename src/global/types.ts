@@ -19,7 +19,8 @@ export interface IRecord {
 	modifiedBy?: string,
 	inViewing?: boolean,
 	inEditing?: boolean,
-	inAdding?: boolean
+	inAdding?: boolean,
+	archived: boolean
 }
 
 
@@ -115,6 +116,9 @@ export interface IGlobalContext {
 	getQuestion: (id: number) => Promise<IQuestion | undefined>;
 	joinAssignedAnswers: (assignedAnswers: IAssignedAnswer[]) => Promise<IAssignedAnswer[]>;
 	getAnswer: (id: number) => Promise<IAnswer | undefined>;
+	getMaxConversation: (dbp: IDBPDatabase) => Promise<number>;
+	addHistory: (dbp: IDBPDatabase|null, history: IHistory) => Promise<void>;
+	getAnswersRated: (dbp: IDBPDatabase | null, questionId: number) => Promise<Map<number, IAnswerRating>>;
 }
 
 export enum GlobalActionTypes {
@@ -299,6 +303,27 @@ export interface IRoleData {
 	title: string,
 	roles?: IRoleData[],
 	users?: IUserData[]
+}
+
+
+export interface IHistory {
+	conversation?: number;
+	client: string;
+	questionId: number;
+	answerId: number;
+	created: Date
+}
+
+export interface IHistoryData {
+	client: string;
+	questionId: number;
+	answerId: number;
+	created?: Date
+}
+
+export interface IAnswerRating {
+	rate: number;
+	rateNotFixed?: number; // client cliked on 'Not fixed' button
 }
 
 

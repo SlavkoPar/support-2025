@@ -11,7 +11,8 @@ export const initialAnswer: IAnswer = {
   title: '',
   level: 0,
   source: 0,
-  status: 0
+  status: 0,
+  archived: false
 }
 
 export const initialGroup: IGroup = {
@@ -27,6 +28,7 @@ export const initialGroup: IGroup = {
   numOfAnswers: 0,
   hasMore: false,
   isExpanded: false,
+  archived: false
 }
 
 export const initialState: IGroupsState = {
