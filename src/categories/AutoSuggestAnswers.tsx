@@ -345,7 +345,7 @@ export class AutoSuggestAnswers extends React.Component<{
 				}
 				i++;
 			};
-			console.log('map', map)
+			//console.log('map', map)
 
 			let values = map.values();
 			let data: IAnswerRowShort[] = [];
@@ -363,7 +363,7 @@ export class AutoSuggestAnswers extends React.Component<{
 				i = 0;
 				while (i < rows.length) {
 					const row = rows[i];
-					console.log(row);
+					// console.log(row);
 					const { id, title, groupId, groupTitle, parentGroup, parentGroupUp } = row;
 					let groupParentTitle = '';
 

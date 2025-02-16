@@ -29,6 +29,7 @@ import categoryData from './categories-questions.json';
 import groupData from './groups-answers.json';
 import roleData from './roles-users.json';
 import historyData from './history.json';
+import { forEachChild } from "typescript";
 
 const GlobalContext = createContext<IGlobalContext>({} as any);
 const GlobalDispatchContext = createContext<Dispatch<any>>(() => null);
@@ -545,10 +546,7 @@ export const GlobalProvider: React.FC<Props> = ({ children }) => {
           // History
           const historyStore = db.createObjectStore('History', { autoIncrement: true });
           historyStore.createIndex('conversation_idx', 'conversation', { unique: false }); // used for getLastConversation
-          historyStore.createIndex('conversation_question_idx', ['conversation', 'questionId'], { unique: false });
-          historyStore.createIndex('question_answer_idx', ['questionId', 'answerId'], { unique: false });
           historyStore.createIndex('question_conversation_answer_idx', ['questionId', 'conversation', 'answerId'], { unique: false });
-          historyStore.createIndex('question_conversation_idx', ['questionId', 'conversation'], { unique: false });
 
           initializeData = true;
         },
@@ -778,18 +776,19 @@ export const GlobalProvider: React.FC<Props> = ({ children }) => {
     if (!dbp) {
       dbp = globalState.dbp;
     }
-    const { conversation, client, questionId, answerId, created } = history;
+    const { conversation, client, questionId, answerId, fixed, created } = history;
     await dbp!.add('History', {
       conversation,
       client,
       questionId,
       answerId,
+      fixed,
       created
     });
     Promise.resolve();
   }
-
-  const getAnswersRated = async (dbp: IDBPDatabase | null, questionId: number): Promise<Map<number, IAnswerRating>> => {
+  
+  const getAnswersRated = async (dbp: IDBPDatabase | null, questionId: number): Promise<IAnswerRating[]> => {
     if (!dbp) {
       dbp = globalState.dbp;
     }
@@ -798,24 +797,67 @@ export const GlobalProvider: React.FC<Props> = ({ children }) => {
     const map = new Map<number, IAnswerRating>();
     for await (const cursor of index.iterate(IDBKeyRange.bound([questionId, 1000, 0], [questionId, 999999, 999999], false, true))) {
       const history: IHistory = cursor!.value;
-      const { answerId /*, clickedNotFixed*/ } = history;
+      const { answerId, fixed } = history;
       if (!map.has(answerId)) {
-        map.set(answerId, { rate: 1, rateNotFixed: 0 });
+        map.set(answerId, { fixed: fixed === true ? 1 : 0, notFixed: fixed === false ? 1 : 0, Undefined: fixed === undefined ? 1 : 0 });
       }
       else {
         const answerRating = map.get(answerId);
-        map.set(answerId, { rate: answerRating!.rate + 1, rateNotFixed: 0 });
+        switch (fixed) {
+          case true:
+            answerRating!.fixed++;
+            break;
+          case false:
+            answerRating!.notFixed++;
+            break;
+          case undefined:
+            answerRating!.Undefined++;
+            break;
+          default:
+            alert('unk rate')
+            break;
+        }
+        map.set(answerId, answerRating!);
       }
     }
-    return map;
+    const arr: IAnswerRating[] = [];
+    map.forEach((value, key) => {
+      arr.push({answerId: key, ...value})
+    })
+    arr.sort(compareFn);
+    return arr;
   }
 
+  const compareFn = (a:IAnswerRating, b:IAnswerRating) : number => {
+    if (a.fixed > b.fixed) {
+      return -1;
+    } 
+    else if (a.fixed < b.fixed) {
+      return 1;
+    }
 
+    if (a.Undefined > b.Undefined) {
+      return -1;
+    } 
+    else if (a.Undefined < b.Undefined) {
+      return 1;      
+    }
+
+    if (a.notFixed > b.notFixed) {
+      return -1;
+    } 
+    else if (a.notFixed < b.notFixed) {
+      return 1;
+    }
+
+    // a must be equal to b
+    return 0; 
+  }
 
   return (
     <GlobalContext.Provider value={{
       globalState, OpenDB, loadAllCategories, registerUser, signInUser, getUser, exportToJSON, health,
-      getSubCats, getCatsByKind, getQuestion, joinAssignedAnswers, getAnswer, 
+      getSubCats, getCatsByKind, getQuestion, joinAssignedAnswers, getAnswer,
       getMaxConversation, addHistory, getAnswersRated
     }}>
       <GlobalDispatchContext.Provider value={dispatch}>

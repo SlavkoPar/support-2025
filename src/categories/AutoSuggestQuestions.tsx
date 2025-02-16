@@ -236,7 +236,7 @@ export class AutoSuggestQuestions extends React.Component<{
 						const { id, title } = q;
 						if (!questionRows.includes(id!))
 							questionRows.push(id!);
-						console.log(q);
+						//console.log(q);
 						// 2) Group questions by parentCategory
 						const quest: IQuest = {
 							id: id!,
@@ -278,7 +278,7 @@ export class AutoSuggestQuestions extends React.Component<{
 			catQuests.forEach((quests, categoryId) => {
 				const cat = this.allCategories.get(categoryId);
 				const { title, titlesUpTheTree, variations } = cat!;
-				console.log(`${categoryId} = ${quests}`);
+				//console.log(`${categoryId} = ${quests}`);
 				const catSection: ICatSection = {
 					categoryId,
 					categoryTitle: title,
@@ -310,7 +310,7 @@ export class AutoSuggestQuestions extends React.Component<{
 					}
 				});
 				catSections.push(catSection);
-				console.log(catSections)
+				//console.log(catSections)
 			});
 			return catSections;
 		}

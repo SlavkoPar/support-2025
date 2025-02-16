@@ -117,8 +117,8 @@ export interface IGlobalContext {
 	joinAssignedAnswers: (assignedAnswers: IAssignedAnswer[]) => Promise<IAssignedAnswer[]>;
 	getAnswer: (id: number) => Promise<IAnswer | undefined>;
 	getMaxConversation: (dbp: IDBPDatabase) => Promise<number>;
-	addHistory: (dbp: IDBPDatabase|null, history: IHistory) => Promise<void>;
-	getAnswersRated: (dbp: IDBPDatabase | null, questionId: number) => Promise<Map<number, IAnswerRating>>;
+	addHistory: (dbp: IDBPDatabase | null, history: IHistory) => Promise<void>;
+	getAnswersRated: (dbp: IDBPDatabase | null, questionId: number) => Promise<IAnswerRating[]>;
 }
 
 export enum GlobalActionTypes {
@@ -311,6 +311,7 @@ export interface IHistory {
 	client: string;
 	questionId: number;
 	answerId: number;
+	fixed: boolean | undefined; // when client didn't click on 'Fixed' or 'Not fixed' buttons
 	created: Date
 }
 
@@ -322,8 +323,10 @@ export interface IHistoryData {
 }
 
 export interface IAnswerRating {
-	rate: number;
-	rateNotFixed?: number; // client cliked on 'Not fixed' button
+	answerId?: number;
+	fixed: number;
+	notFixed: number; // client clicked on 'Not fixed' button
+	Undefined: number; // not clicked
 }
 
 

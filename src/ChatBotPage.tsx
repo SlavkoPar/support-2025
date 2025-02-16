@@ -45,7 +45,7 @@ const ChatBotPage: React.FC = () => {
 	const [showAnswer, setShowAnswer] = useState(false);
 	const [answer, setAnswer] = useState<IAnswer | undefined>(undefined);
 	const [hasMoreAnswers, setHasMoreAnswers] = useState<boolean>(false);
-	const [conversation, setConversation] = useState<number|undefined>(undefined);
+	const [conversation, setConversation] = useState<number | undefined>(undefined);
 
 	const { getCatsByKind, getMaxConversation, addHistory, getAnswersRated } = useGlobalContext();
 	const { dbp, canEdit, authUser, isDarkMode, variant, bg, allCategories } = useGlobalState();
@@ -119,13 +119,26 @@ const ChatBotPage: React.FC = () => {
 	const onSelectQuestion = async (categoryId: string, questionId: number) => {
 		// navigate(`/support-2025/categories/${categoryId}_${questionId.toString()}`)
 		// const question = await getQuestion(questionId);
+
+		// salji kasnije kad klikne na Fixed
+		if (answer) {
+			addHistory(dbp, {
+				conversation,
+				client: authUser.nickName,
+				questionId: selectedQuestion!.id!,
+				answerId: answer.id!,
+				fixed: undefined,
+				created: new Date()
+			})
+		}
+
 		let conv = conversation;
 		if (!conversation) {
 			const last = await getMaxConversation(dbp!);
 			conv = last + 1
 			setConversation(conv);
 		}
-		
+
 		if (answer) {
 			const props: IChild = {
 				type: ChildType.ANSWER,
@@ -137,7 +150,7 @@ const ChatBotPage: React.FC = () => {
 		const res: INewQuestion = await (await hook).setNewQuestion(questionId);
 		const { question, firstAnswer, hasMoreAnswers } = res; // as unknown as INewQuestion;
 		const answersRated = await getAnswersRated(dbp, question!.id!);
-		console.log({answersRated});
+		console.log({ answersRated });
 		if (question) {
 			const props: IChild = {
 				type: ChildType.QUESTION,
@@ -154,20 +167,21 @@ const ChatBotPage: React.FC = () => {
 		setHasMoreAnswers(hasMoreAnswers);
 		setAnswerId((answerId) => answerId + 1);
 		setAnswer(firstAnswer);
-		if (firstAnswer) {
-			addHistory(dbp, {
-				conversation: conv,
-				client: authUser.nickName,
-				questionId: question!.id!,
-				answerId: firstAnswer.id!,
-				created: new Date()
-			})
-		}
+		// // salji kasnije kad klikne na Fixed
+		// if (firstAnswer) {
+		// 	addHistory(dbp, {
+		// 		conversation: conv,
+		// 		client: authUser.nickName,
+		// 		questionId: question!.id!,
+		// 		answerId: firstAnswer.id!,
+		// 		fixed: undefined,
+		// 		created: new Date()
+		// 	})
+		// }
 	}
 
-	const getNextAnswer = async () => {
-		const next: INextAnswer = await (await hook).getNextAnswer();
 
+	const answerFixed = async () => {
 		const props: IChild = {
 			type: ChildType.ANSWER,
 			isDisabled: true,
@@ -176,16 +190,60 @@ const ChatBotPage: React.FC = () => {
 		}
 		setPastEvents((prevHistory) => [...prevHistory, props]);
 
+		addHistory(dbp, {
+			conversation,
+			client: authUser.nickName,
+			questionId: selectedQuestion!.id!,
+			answerId: answer!.id!,
+			fixed: true,
+			created: new Date()
+		})
+		//
+		// TODO logic 
+		//
+
+		setHasMoreAnswers(false);
+		//setAnswerId((answerId) => answerId + 1);
+		setAnswer(undefined);
+		setShowAnswer(false);
+	}
+
+	const getNextAnswer = async () => {
+		// past events
+		const props: IChild = {
+			type: ChildType.ANSWER,
+			isDisabled: true,
+			txt: answer ? answer.title : 'no answers',
+			hasMoreAnswers: true
+		}
+		setPastEvents((prevHistory) => [...prevHistory, props]);
+
+		// next
+		const next: INextAnswer = await (await hook).getNextAnswer();
 		const { nextAnswer, hasMoreAnswers } = next;
-		if (nextAnswer) {
+
+		if (answer) {
 			addHistory(dbp, {
 				conversation,
 				client: authUser.nickName,
 				questionId: selectedQuestion!.id!,
-				answerId: nextAnswer.id!,
+				answerId: answer.id!,
+				fixed: nextAnswer ? false : undefined,
 				created: new Date()
 			})
 		}
+
+		// salji gore
+		// if (nextAnswer) {
+		// 	addHistory(dbp, {
+		// 		conversation,
+		// 		client: authUser.nickName,
+		// 		questionId: selectedQuestion!.id!,
+		// 		answerId: nextAnswer.id!,
+		// 		fixed: hasMoreAnswers ? undefined : false,
+		// 		created: new Date()
+		// 	})
+		// }
 		setHasMoreAnswers(hasMoreAnswers);
 		setAnswerId((answerId) => answerId + 1);
 		setAnswer(nextAnswer);
@@ -215,7 +273,7 @@ const ChatBotPage: React.FC = () => {
 	const AnswerComponent = (props: IChild) => {
 		const { isDisabled, txt } = props;
 		return (
-			<div 
+			<div
 				id={answerId.toString()}
 				className={`${isDarkMode ? "dark" : "light"} mx-6 border border-1 rounded-1`}
 			>
@@ -226,15 +284,29 @@ const ChatBotPage: React.FC = () => {
 						<div>
 							{txt}
 						</div>
-						{!isDisabled && <Button
-							size="sm"
-							type="button"
-							onClick={getNextAnswer}
-							disabled={!hasMoreAnswers}
-							className='align-middle mx-2 border border-1 rounded-1 py-0'
-						>
-							Haven't fixed!
-						</Button>
+						{!isDisabled && answer &&
+							<div>
+								<Button
+									size="sm"
+									type="button"
+									onClick={answerFixed}
+									disabled={!hasMoreAnswers}
+									className='align-middle ms-3 border border-1 rounded-1 py-0'
+									variant="success"
+								>
+									Fixed
+								</Button>
+								<Button
+									size="sm"
+									type="button"
+									onClick={getNextAnswer}
+									disabled={!hasMoreAnswers}
+									className='align-middle ms-2 border border-1 rounded-1 py-0'
+									variant="primary"
+								>
+									Haven't fixed
+								</Button>
+							</div>
 						}
 					</Col>
 				</Row>
@@ -282,13 +354,13 @@ const ChatBotPage: React.FC = () => {
 
 	return (
 		<Container id='container' fluid className='text-info'> {/* align-items-center" */}
-			<div>
+			<div key='Welcome'>
 				<p><b>Welcome</b>, I am Buddy and I am here to help You</p>
 			</div>
 
-			<Form className='text-center border border-1 m-1 rounded-1'>
+			<Form key='options' className='text-center border border-1 m-1 rounded-1'>
 				<div className='text-center'>
-					Izberi Opcije
+					Select Options
 				</div>
 				<div className='text-center'>
 					{/* <ListGroup horizontal> */}
@@ -311,9 +383,9 @@ const ChatBotPage: React.FC = () => {
 			</Form>
 
 			{showUsage &&
-				<Form className='text-center border border-1 m-1 rounded-1'>
+				<Form key="usage" className='text-center border border-1 m-1 rounded-1'>
 					<div className='text-center'>
-						Izaberite uslugu za koju Vam je potrebna podrška
+						Select services for which you need support
 					</div>
 					<div className='text-center'>
 						{catsUsage.map(({ id, title }: ICat) => (
@@ -331,7 +403,7 @@ const ChatBotPage: React.FC = () => {
 				</Form>
 			}
 
-			<div className='history'>
+			<div key='history' className='history'>
 				{
 					pastEvents.map(childProps => {
 						switch (childProps.type) {
@@ -355,21 +427,21 @@ const ChatBotPage: React.FC = () => {
 			} */}
 
 			{showAnswer &&
-				<div>
+				<div key="answer">
 					<AnswerComponent type={ChildType.ANSWER} isDisabled={false} txt={answer ? answer.title : 'no answers'} hasMoreAnswers={hasMoreAnswers} />
 				</div>
 			}
 
 			{catsSelected && !showAutoSuggest &&
 				<Button
+					key="newQuestion"
 					variant="secondary"
 					size="sm"
 					type="button"
 					onClick={() => {
 						setAutoSuggestId(autoSuggestId + 1);
 						setShowAutoSuggest(true);
-					}
-					}
+					}}
 					className='m-1 border border-1 rounded-1 py-0'
 				>
 					New Question
